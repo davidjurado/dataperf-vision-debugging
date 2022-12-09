@@ -6,6 +6,8 @@ MLCube is a set of common conventions for creating ML software that can just "pl
 
 MLCube isn’t a new framework or service; MLCube is a consistent interface to machine learning models in containers like Docker. Models published with the MLCube interface can be run on local machines, on a variety of major clouds, or in Kubernetes clusters - all using the same code. MLCommons provides open source “runners” for each of these environments that make training a model in an MLCube™ a single command.
 
+To learn more about the MLCube core concepts please refer to the [documentation](https://mlcommons.github.io/mlcube/getting-started/concepts/).
+
 ## Configuring MLCube
 
 Cubes need to be configured before they can run. MLCube runners do that automatically, and users do not need to run the configure step manually. If for some reason this needs to be done, for instance, to pre-build or pull docker images (if these processes take too much time), MLCube runtime implements configure command. The Hello World cube is a Docker-based cube, and users can configure the MLCube by running the following command: mlcube configure --mlcube=. --platform=docker The Docker runner will build or will pull the docker image for the Hello World cube. As it is mentioned above, this step is optional and is only required when MLCubes need to be rebuilt. This can happen when users change implementation files and want to re-package their ML project into MLCube. In other situations, MLCube runners can auto-detect if configure command needs to be run before running MLCube tasks.
