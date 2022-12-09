@@ -8,8 +8,8 @@ import eval as eval
 
 
 def run_tasks(
-        setup_yaml_path: str = c.DEFAULT_SETUP_YAML_PATH,
-        docker_flag: bool = False) -> None:
+    setup_yaml_path: str = c.DEFAULT_SETUP_YAML_PATH, docker_flag: bool = False
+) -> None:
     """Runs visual benchmark tasks based on config yaml file.
 
     Args:
@@ -18,35 +18,37 @@ def run_tasks(
         docker_flag (bool, optional): True when running in container
     """
     task_setup = utils.load_yaml(setup_yaml_path)
-    data_dir_key = c.SETUP_YAML_DOCKER_DATA_DIR_KEY if docker_flag \
+    data_dir_key = (
+        c.SETUP_YAML_DOCKER_DATA_DIR_KEY
+        if docker_flag
         else c.SETUP_YAML_LOCAL_DATA_DIR_KEY
+    )
     data_dir = task_setup[data_dir_key]
     dim = task_setup[c.SETUP_YAML_DIM_KEY]
     emb_path = os.path.join(data_dir, task_setup[c.SETUP_YAML_EMB_KEY])
 
     ss = utils.get_spark_session(task_setup[c.SETUP_YAML_SPARK_MEM_KEY])
 
-    print('Loading embeddings\n')
+    print("Loading embeddings\n")
     emb_df = utils.load_emb_df(ss=ss, path=emb_path, dim=dim)
 
-    task_paths = {
-        task: task_setup[task] for task in task_setup[c.SETUP_YAML_TASKS_KEY]}
+    task_paths = {task: task_setup[task] for task in task_setup[c.SETUP_YAML_TASKS_KEY]}
     task_scores = {}
     for task, paths in task_paths.items():
-        print(f'Evaluating task: {task}')
+        print(f"Evaluating task: {task}")
         train_path, test_path = [os.path.join(data_dir, p) for p in paths]
 
-        print(f'Loading training data for {task}...')
+        print(f"Loading training data for {task}...")
         train_df = utils.load_train_df(ss=ss, path=train_path)
         train_df = utils.add_emb_col(df=train_df, emb_df=emb_df)
 
-        print(f'Loading test data for {task}...')
+        print(f"Loading test data for {task}...")
         test_df = utils.load_test_df(ss=ss, path=test_path, dim=dim)
 
-        print(f'Training classifier for {task}...')
+        print(f"Training classifier for {task}...")
         clf = eval.get_trained_classifier(df=train_df)
 
-        print(f'Scoring trained classifier for {task}...\n')
+        print(f"Scoring trained classifier for {task}...\n")
         task_scores[task] = eval.score_classifier(df=test_df, clf=clf)
 
     save_dir = os.path.join(data_dir, task_setup[c.SETUP_YAML_RESULTS_KEY])
