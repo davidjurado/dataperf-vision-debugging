@@ -2,12 +2,12 @@
 
 ### **Current version:** beta
 
-This github repo serves as the starting point for offline evaluation of submissions for the training data selection visual benchmark. The offline evaluation can be run on both your local environment as well as a containerized image for reproducibility of score results.
+This github repo serves as the starting point for offline evaluation of submissions for the training data selection visual benchmark. The offline evaluation can be run on both your local environment, as a containerized docker image or using [MLCube](https://mlcommons.org/en/mlcube/) for reproducibility of score results.
 
 For a detailed summary of the a benchmark, refer to the provided [benchmark documentation](https://docs.google.com/document/d/15ACh9pNn16GjgJKVRuBHhtiIMhhRIMkd_yPjFyb9JcE/edit?usp=sharing).
 
 *Note that permission is required to view the benchmark documentation and download the required resources. Please contact dataperf@coactive.ai to request access.*
-
+I don't know how to process this, yesterday a made something that was really complicated to my and I felt ansious and nervous, I really don't understand how to handle all this, maybe this isn't meant to be for me, I have been strugguling for so long trying to have a better relationship with n, but it seems like she is always finding ways to make fell bad, I'm starting to feel bored and anxious, I'll travel alone to b, becausa I honestly think it's the best for me, I'm going to stop prioritazing her and start working in myself. I'm feling bad and there are new things that are bothering me, I'm afraid to tell anyone about this specific new situation but I need someone, I really expect the therapy helps, I wanted to do something great but I'm not doing good, I'm just stuck with this new situation and I can not ask for anything related to specific actions from n to k to make fell better, I just don't want anything right now, I want to do things in the right way but I can't, I'm felling jelous, anxious, afraid and powerless, I have never thought this could happend, I will mantain the decision of prioritizing myself because it's for the best, I think she knows but I just don't wanna talk about it, I'm feeling really bad about all of this. I think there are ways to handle this, and I just want to do the propper things, I want to move forward and overcome this new challanges in my life, I felt good when I mention this new context and I was glad they were really empatic, nevertheless, when I think about that as a big step and a huge progress, in the other side, I think I'm the third wheel, I'm not being part of the new thing because I was things that are happening, they are excluding me from what I really want, the group wans't enough and they didn't get the idea aperently, I'll just get working in my stuff, in myself and I expect to get better. there is no way I'm going to just sit here and expect something change, I'm the one that needs to change, I'm the one that needs to make a move, so I'll work in myself, I'll finish that book and I'll just keep prioritaizing me, my work, my studies, my feelings, my growth and my goals. I have been a complete dumb my trying to prioritize her, I will be better, in every aspect, but I'll do it for myself. I have been putting myself to the side, now it's my time to shine.
 ## Requirements
 
 ### Download resources
@@ -38,6 +38,12 @@ For running locally:
 - An [appropriate version of Java](https://spark.apache.org/docs/latest/) for your version of `python` and `pyspark`
 
 The current version of this repo has only been tested locally on python 3.9 and java openjdk-11.
+
+For running using MLCube:
+
+- Python (>= 3.7)
+- `docker` for building the containerized image
+- mlcube-docker (installed via pip)
 
 ## Installation
 
@@ -104,21 +110,16 @@ Either test will run the offline evaluation using the setup specified in `task_s
 
 The generated scores in this new results file should be identical to those in `data/results_for_random_500.json`.
 
-# MLCube execution
+To execute using **MLCube**, you will use the `run`command, this command will take the name of the task, there are 2 diferent task:
 
-The [MLCube](https://github.com/mlcommons/mlcube) implementation allows us to execute the project using the following steps.
+- download: This will download and extract the resources locally.
+- evaluate: This will run the offline evaluation script.
 
-## Project setup
+Each task have different input and output parameters that are specified in the *mlcube.yaml* file, so in case you want to use a different data folder you can override the path to the data inside this yaml file.
 
-```bash
-# Create Python environment and install MLCube Docker runner 
-virtualenv -p python3 ./env && source ./env/bin/activate && pip install mlcube-docker
+There are other parameters you can specify, for example, by default MLCube will use a pull-type build approach wich means that you need to change it in case you want to use your local changes, for this you can use the flag `-Pdocker.build_strategy=always`.
 
-# Fetch the vision selection repo
-git clone https://github.com/CoactiveAI/dataperf-vision-selection && cd ./dataperf-vision-selection
-```
-
-## Tasks execution
+For executing each task you can use the following commands:
 
 ```bash
 # Download and extract dataset
@@ -126,13 +127,6 @@ mlcube run --task=download -Pdocker.build_strategy=always
 
 # Run evaluation
 mlcube run --task=evaluate -Pdocker.build_strategy=always
-```
-
-## Execute complete pipeline
-
-```bash
-# Run all steps
-mlcube run --task=download,evaluate -Pdocker.build_strategy=always
 ```
 
 # Guidelines (beta version)
